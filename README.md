@@ -1832,6 +1832,21 @@ This last checkpoint isn’t about more code, but about **thinking like a builde
   - Full visibility into costs
 - Result: **customizable, reliable, decentralized gas sponsorship**.
 
+### ⚠️ Limitations, not MACI
+
+This challenge does not implement the full MACI (Minimal Anti-Collusion Infrastructure) framework.
+While it showcases commitment + nullifier–based privacy, it does not provide coercion resistance.
+
+In this version, a voter’s choice is baked into the calldata, and by revealing their proof, they can prove how they voted afterwards.
+
+That means vote selling or coercion is still possible.
+
+True coercion resistance (as provided by MACI) requires an extra mechanism, typically a key-change step or coordinator, so that voters can’t prove their actual choice even if they try.
+
+If you want to go deeper into why this matters, and how systems like MACI and multi-party computation solve it, read Vitalik [Buterin’s essay](https://vitalik.eth.limo/general/2021/05/25/voting2.html).
+
+If you want to see a real-world project that implements MACI, check out [maci.pse.dev](maci.pse.dev).
+
 ### 🌱 Beyond voting
 
 You now understand the **core mechanics of ZK voting**:
