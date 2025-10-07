@@ -232,6 +232,8 @@ Since \`Hash(left, right) ≠ Hash(right, left)\`, **parity** decides position:
 - **Append-only**: leaves can be added but not removed
 - **ZK-friendly**: [Poseidon](https://www.poseidon-hash.info/) roots work well in zero-knowledge proofs
 
+To understand more about the LeanIMT, take a look at this [visual explanation](https://hackmd.io/@vplasencia/S1whLBN16).
+
 </details>
 
 Merkle trees aren’t required for ZK proofs, but they’re the **most efficient way** to prove membership in a large set.
@@ -318,17 +320,17 @@ LeanIMTData private s_tree;
 //////////////////
 
 function register(uint256 _commitment) public {
-/// Checkpoint 2 //////
-if (!s_voters[msg.sender] || s_hasRegistered[msg.sender]) {
-revert Voting__NotAllowedToVote();
-}
-if (s_commitments[_commitment]) {
-revert Voting__CommitmentAlreadyAdded(_commitment);
-}
-s_commitments[_commitment] = true;
-s_hasRegistered[msg.sender] = true;
-s_tree.insert(_commitment);
-emit NewLeaf(s_tree.size - 1, _commitment);
+  /// Checkpoint 2 //////
+  if (!s_voters[msg.sender] || s_hasRegistered[msg.sender]) {
+  revert Voting__NotAllowedToVote();
+  }
+  if (s_commitments[_commitment]) {
+  revert Voting__CommitmentAlreadyAdded(_commitment);
+  }
+  s_commitments[_commitment] = true;
+  s_hasRegistered[msg.sender] = true;
+  s_tree.insert(_commitment);
+  emit NewLeaf(s_tree.size - 1, _commitment);
 }
 
 \`\`\`
@@ -359,7 +361,7 @@ Before deploying, make one important change:
 
 1. Open **\`00_deploy_your_voting_contract.ts\`**
 2. Set your address as the \`ownerAddress\`
-3. Comment out \`leanIMTAddress\`
+3. 3. Set LeanIMT library address (\`leanIMT.address\`) at line 62
 4. Uncomment deployment of both \`poseidon3\` and \`leanIMT\`
 
 > 💡 **Poseidon3** is the hash function we use. More on that later.
@@ -843,7 +845,7 @@ To generate it:
 bb write_vk -b <bytecode> -o <output>
 \`\`\`
 
-- \`-b\` → the same bytecode from \`nargo compile\`
+- \`-b\` → the same bytecode from \`nargo compile\` (you'll find it in the \`circuits.json\` file)
 - \`-o\` → the file path where the verification key will be saved
 
 > 💡 When you run \`bb verify\`, the verifier must know **what circuit** the proof claims to satisfy.
@@ -977,7 +979,7 @@ That’s why **nullifiers are the cornerstone** of privacy-preserving voting.
 - Increment \`s_yesVotes\` or \`s_noVotes\` accordingly
 - Emit the \`VoteCast\` event
 
-> 🚨⚠️ Go to packages/hardhat/contracts/mocks and uncomment all the code
+> 🚨⚠️ Go to packages/hardhat/contracts/mocks and uncomment all the code. This enables the mock contracts needed for local testing and verification.
 
 <details>
 <summary>🦉 Guiding Questions</summary>
@@ -1123,7 +1125,7 @@ Think of this as the **secret handshake** for your voting system:
 > Mismatches will cause errors.
 > In our \`nextjs/package.json\`, you’ll see:
 > \`"@aztec/bb.js": "0.82.0"\` and \`"@noir-lang/noir_js": "1.0.0-beta.3"\`\.
-> These must align.
+> Make sure these match the versions shown when you run \`bb --version\` and \`nargo --version\`.
 
 ### 🛠 Set Up the Commitment Function
 
@@ -1410,9 +1412,6 @@ Fire up [localhost:3000](http://localhost:3000/), pick your voting option, and h
 Once the proof is created, the button will update to show **Proof already exists**.
 
 ![proofgenerated-zk](https://raw.githubusercontent.com/scaffold-eth/se-2-challenges/challenge-zk-voting/extension/packages/nextjs/public/proofgenerated-zk.png)
-
-If you added a console log pattern, check the console to see how a proof looks.
-Otherwise, you can also log your **localStorage** by pressing the **Log Local Storage** button at the bottom of the page — it will also show you how a proof looks.
 
 👉 If you added a \`console.log\`, check your dev console to see the raw proof output.
 👉 Alternatively, scroll to the bottom of the page and click **Log Local Storage** to print out the proof data saved in your browser.
@@ -1850,15 +1849,6 @@ This last checkpoint isn’t about more code, but about **thinking like a builde
 
 ### 🌱 Beyond voting
 
-The same **commitment + nullifier** pattern powers other privacy apps:
-
-- Mixers (unlink deposits/withdrawals)
-- Shielded ERC-20 transfers
-- Private allowlists & attestations
-- Quadratic or weighted voting
-
-### 🚀 Where You Go From Here
-
 You now understand the **core mechanics of ZK voting**:
 
 ✔ Commitments & nullifiers
@@ -1867,9 +1857,9 @@ You now understand the **core mechanics of ZK voting**:
 ✔ Solidity verifiers
 ✔ Anonymous vote casting
 
-But this is just the beginning. Noir enables powerful circuit design:
+But this is just the beginning. The same **commitment + nullifier** pattern that powers your voting system also unlocks a world of other privacy-preserving applications:
 
-- Mixers
+- Mixers (unlink deposits and withdrawals)
 - Shielded ERC-20 transfers
 - Quadratic voting
 - New governance models
