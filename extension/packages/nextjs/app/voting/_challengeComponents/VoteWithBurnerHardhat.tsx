@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Contract, HDNodeWallet, JsonRpcProvider, Wallet } from "ethers";
+import { createPublicClient, createWalletClient, getContract, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { hardhat } from "viem/chains";
 import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
 import { useDeployedContractInfo, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
@@ -14,7 +16,8 @@ import {
 } from "~~/utils/proofStorage";
 
 ////// Checkpoint 9 //////
-// import {  parseEther } from "ethers";
+// import {  parseEther, createTestClient } from "viem";
+// import { generatePrivateKey } from "viem/accounts";
 
 type LocalProofData = {
   proof: Uint8Array;
@@ -22,21 +25,21 @@ type LocalProofData = {
 };
 
 const sendVoteWithBurner = async ({
-  contract,
-  provider,
+  viemContract,
+  publicClient,
   walletAddress,
   proofData,
 }: {
-  contract: Contract;
-  provider: JsonRpcProvider;
-  walletAddress: string;
+  viemContract: any;
+  publicClient: ReturnType<typeof createPublicClient>;
+  walletAddress: `0x${string}`;
   proofData: LocalProofData;
 }): Promise<string> => {
   ////// Checkpoint 9 //////
   console.debug(
     "Checkpoint 9",
-    !!contract,
-    !!provider,
+    !!viemContract,
+    !!publicClient,
     !!walletAddress,
     !!proofData,
     uint8ArrayToHexString(new Uint8Array(0)),
@@ -45,7 +48,7 @@ const sendVoteWithBurner = async ({
 };
 
 export const VoteWithBurnerHardhat = ({ contractAddress }: { contractAddress?: `0x${string}` }) => {
-  const [burnerWallet, setBurnerWallet] = useState<Wallet | HDNodeWallet | null>(null);
+  const [burnerWallet, setBurnerWallet] = useState<{ address: `0x${string}`; privateKey: `0x${string}` } | null>(null);
   const [txStatus, setTxStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [hasProofStored, setHasProofStored] = useState<boolean>(false);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -54,7 +57,7 @@ export const VoteWithBurnerHardhat = ({ contractAddress }: { contractAddress?: `
 
   const generateBurnerWallet = () => {
     ////// Checkpoint 9 //////
-    const wallet = undefined as unknown as Wallet; // placeholder
+    const wallet = undefined as unknown as { address: `0x${string}`; privateKey: `0x${string}` }; // placeholder
 
     setBurnerWallet(wallet);
 
@@ -117,7 +120,11 @@ export const VoteWithBurnerHardhat = ({ contractAddress }: { contractAddress?: `
       try {
         const storedBurnerWallet = loadBurnerWalletFromLocalStorage(effectiveContractAddress, userAddress);
         if (storedBurnerWallet) {
-          setBurnerWallet(new Wallet(storedBurnerWallet.privateKey));
+          const account = privateKeyToAccount(storedBurnerWallet.privateKey as `0x${string}`);
+          setBurnerWallet({
+            privateKey: storedBurnerWallet.privateKey as `0x${string}`,
+            address: account.address as `0x${string}`,
+          });
         } else {
           setBurnerWallet(null);
         }
@@ -157,16 +164,21 @@ export const VoteWithBurnerHardhat = ({ contractAddress }: { contractAddress?: `
 
               setTxStatus("pending");
 
-              const wallet = (burnerWallet ?? generateBurnerWallet()) as Wallet | HDNodeWallet;
-              const provider = new JsonRpcProvider("http://localhost:8545");
+              const wallet = burnerWallet ?? generateBurnerWallet();
+              const publicClient = createPublicClient({ chain: hardhat, transport: http("http://localhost:8545") });
               const address = (contractAddress || contractInfo?.address) as string | undefined;
               if (!address) throw new Error("Contract not found");
               const abi = (contractInfo?.abi as any) || [];
-              const contract = new Contract(address, abi, wallet.connect(provider));
+              const voterClient = createWalletClient({
+                account: privateKeyToAccount(wallet.privateKey),
+                chain: hardhat,
+                transport: http("http://localhost:8545"),
+              });
+              const viemContract = getContract({ address: address as `0x${string}`, abi, client: voterClient });
 
               await sendVoteWithBurner({
-                contract,
-                provider,
+                viemContract,
+                publicClient,
                 walletAddress: wallet.address,
                 proofData: proofData as LocalProofData,
               });

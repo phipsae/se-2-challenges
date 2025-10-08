@@ -1431,7 +1431,7 @@ You’ll be working in two functions:
 ### 1. **Generate a fresh burner wallet**
 
 - In `generateBurnerWallet`, create a brand-new wallet.
-- Use **ethers.js** to generate this new keypair.
+- Use **viem** to generate this new keypair.
 
 ### 2. **Fund the burner (local Hardhat only)**
 
@@ -1452,14 +1452,14 @@ You’ll be working in two functions:
 <details>
 <summary>❓ Question 1</summary>
 
-How do you generate a fresh wallet using **ethers**?
+How do you generate a fresh wallet using **viem**?
 
 </details>
 
 <details>
 <summary>❓ Question 2</summary>
 
-How can you access the **first signer** from the Hardhat environment with ethers?
+How can you fund the generated wallet with **viem**?
 
 </details>
 
@@ -1485,37 +1485,40 @@ After thinking through the guiding questions, have a look at the solution code:
 
 ```ts
 const sendVoteWithBurner = async ({
-  contract,
-  provider,
+  viemContract,
+  publicClient,
   walletAddress,
   proofData,
 }: {
-  contract: Contract;
-  provider: JsonRpcProvider;
-  walletAddress: string;
+  viemContract: any;
+  publicClient: ReturnType<typeof createPublicClient>;
+  walletAddress: `0x${string}`;
   proofData: LocalProofData;
 }): Promise<string> => {
   ////// Checkpoint 9 //////
   const needed = parseEther("0.01");
-  const bal = await provider.getBalance(walletAddress);
+  const bal = await publicClient.getBalance({ address: walletAddress });
   if (bal < needed) {
-    const signer = await provider.getSigner();
-    await signer.sendTransaction({ to: walletAddress, value: needed - bal });
+    const testClient = createTestClient({ chain: hardhat, mode: "hardhat", transport: http("http://localhost:8545") });
+    await testClient.setBalance({ address: walletAddress, value: needed });
   }
 
-  const tx = await contract.vote(
+  const hash = await viemContract.write.vote([
     uint8ArrayToHexString(proofData.proof),
     proofData.publicInputs[0],
     proofData.publicInputs[1],
     proofData.publicInputs[2],
     proofData.publicInputs[3],
-  );
-  return (await tx.wait())?.hash ?? tx.hash;
+  ]);
+  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  return receipt.transactionHash;
 };
 
 const generateBurnerWallet = () => {
   ////// Checkpoint 9 //////
-  const wallet = Wallet.createRandom();
+  const privateKey = generatePrivateKey();
+  const account = privateKeyToAccount(privateKey);
+  const wallet = { privateKey: privateKey as `0x${string}`, address: account.address as `0x${string}` };
   setBurnerWallet(wallet);
 
   const effectiveContractAddress = contractAddress || contractInfo?.address;
@@ -1547,7 +1550,7 @@ If everything went well, you should now see your vote counted (in this example: 
 
 ### **🥅 Goals**
 
-- [ ] Create and fund a **burner wallet** with ethers
+- [ ] Create and fund a **burner wallet** with viem
 - [ ] Use it to **submit your vote** with proof + public inputs
 - [ ] Understand why a burner wallet is needed
 
