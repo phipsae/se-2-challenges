@@ -1146,7 +1146,7 @@ Those placeholders must go — replace them with real logic!
 3. **Hash with Poseidon**: compute the \`commitment\` using Poseidon (2-input), in the exact order \`[nullifier, secret]\`.
    > This mirrors the same hashing logic you used in the circuit.
 4. **Format for Solidity**: convert your \`commitment\` into a \`bytes32\` hex string.
-   - Hint: use \`ethers.toBeHex\` + \`ethers.zeroPadValue(..., 32)\`.
+   - - Hint: use \`toHex\` from viem..
 5. **Return all three values**: \`commitment\`, \`nullifier\`, and \`secret\`.
 
 > 🧠 **Key Reminder**:
@@ -1194,9 +1194,9 @@ const generateCommitment = async (): Promise<CommitmentData> => {
   const secret = BigInt(Fr.random().toString());
   const commitment = poseidon2([nullifier, secret]);
 
-  const commitmentHex = ethers.zeroPadValue(ethers.toBeHex(commitment), 32);
-  const nullifierHex = ethers.zeroPadValue(ethers.toBeHex(nullifier), 32);
-  const secretHex = ethers.zeroPadValue(ethers.toBeHex(secret), 32);
+  const commitmentHex = toHex(commitment, { size: 32 });
+  const nullifierHex = toHex(nullifier, { size: 32 });
+  const secretHex = toHex(secret, { size: 32 });
 
   return {
     commitment: commitmentHex,

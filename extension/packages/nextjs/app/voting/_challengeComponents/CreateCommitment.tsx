@@ -3,7 +3,7 @@
 import { useState } from "react";
 ////// Checkpoint 7 //////
 // import { Fr } from "@aztec/bb.js";
-// import { ethers } from "ethers";
+// import { toHex } from "viem";
 // import { poseidon2 } from "poseidon-lite";
 import { useAccount } from "wagmi";
 import { useDeployedContractInfo, useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
