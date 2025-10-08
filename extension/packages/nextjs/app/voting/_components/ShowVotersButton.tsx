@@ -24,7 +24,12 @@ export const ShowVotersButton = () => {
     if (!voters) return [];
 
     const addresses = Array.from(
-      new Set(voters.map(row => row.args.voter).filter((voter): voter is string => !!voter)),
+      new Set(
+        (voters as any[])
+          .filter(Boolean)
+          .map((row: any) => row?.args?.voter ?? row?.args?.[0])
+          .filter((voter: unknown): voter is string => typeof voter === "string" && voter.length > 0),
+      ),
     );
     return addresses;
   }, [voters]);
