@@ -1385,7 +1385,7 @@ const generateProof = async (
     console.log("proof", proof);
     const proofHex = toHex(proof);
     const inputsHex = publicInputs.map(x =>
-      typeof x === "string" ? (x as \`0x${string}\`) : toHex(x as Uint8Array, { size: 32 }),
+      typeof x === "string" ? (x as \`0x${"${"}string${"}"}\`) : toHex(x as Uint8Array, { size: 32 }),
     );
     const result = encodeAbiParameters([{ type: "bytes" }, { type: "bytes32[]" }], [proofHex, inputsHex]);
     console.log("result", result);
