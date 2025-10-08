@@ -1276,7 +1276,7 @@ This step is all about producing a **zero-knowledge proof** that says:
    > The `threads` option controls how many CPU cores are used (`1` is enough, more threads = faster).
 
 9. **Format the result for Solidity**
-   - Encode `[proof, publicInputs]` with `ethers.AbiCoder`.
+   - Encode `[proof, publicInputs]` with `encodeAbiParameters` from viem. Make sure each value is in hex format.
    - (Hint: check your **`Voting.sol`** contract for the expected format.)
 
 <details>
@@ -1319,13 +1319,6 @@ After thinking through the guiding questions, have a look at the solution code:
 <summary>👩🏽‍🏫 Solution Code</summary>
 
 ```ts
-import { UltraHonkBackend } from "@aztec/bb.js";
-// @ts-ignore
-import { Noir } from "@noir-lang/noir_js";
-import { LeanIMT } from "@zk-kit/lean-imt";
-import { ethers } from "ethers";
-import { poseidon1, poseidon2 } from "poseidon-lite";
-
 const generateProof = async (
   _root: bigint,
   _vote: boolean,
@@ -1375,7 +1368,11 @@ const generateProof = async (
     });
     console.log = originalLog;
     console.log("proof", proof);
-    const result = ethers.AbiCoder.defaultAbiCoder().encode(["bytes", "bytes32[]"], [proof, publicInputs]);
+    const proofHex = toHex(proof);
+    const inputsHex = publicInputs.map(x =>
+      typeof x === "string" ? (x as `0x${string}`) : toHex(x as Uint8Array, { size: 32 }),
+    );
+    const result = encodeAbiParameters([{ type: "bytes" }, { type: "bytes32[]" }], [proofHex, inputsHex]);
     console.log("result", result);
     return { proof, publicInputs };
   } catch (error) {
