@@ -163,7 +163,7 @@ export const VoteWithBurnerSepolia = ({ contractAddress }: { contractAddress?: `
 
       <div className="flex justify-center">
         <button
-          className="btn btn-primary"
+          className={`btn btn-primary ${txStatus === "pending" ? "loading" : ""}`}
           disabled={!hasProofStored || !proofData || txStatus === "pending" || hasSuccessfulVote}
           onClick={async () => {
             try {
@@ -299,7 +299,16 @@ export const VoteWithBurnerSepolia = ({ contractAddress }: { contractAddress?: `
             }
           }}
         >
-          {txStatus === "pending" ? "Voting..." : hasSuccessfulVote ? "Already voted" : "Vote with smart account"}
+          {txStatus === "pending" ? (
+            <>
+              <span className="loading loading-spinner loading-xs"></span>
+              <span>Voting...</span>
+            </>
+          ) : hasSuccessfulVote ? (
+            "Already voted"
+          ) : (
+            "Vote with smart account"
+          )}
         </button>
       </div>
     </div>
