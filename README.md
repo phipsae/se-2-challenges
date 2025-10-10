@@ -906,7 +906,7 @@ The verifier contract may look overwhelming at first, but here’s what to focus
 - ✅ Check that values like `NUMBER_OF_PUBLIC_INPUTS` match what you expect for your proof.
 - 🚪 The main entry point is the `verify` function:
 
-```javascript
+```solidity
 interface IVerifier {
     function verify(bytes calldata _proof, bytes32[] calldata _publicInputs) external view returns (bool);
 }
@@ -1014,7 +1014,7 @@ After thinking through the guiding questions, have a look at the solution code:
 <details>
 <summary>👩🏽‍🏫 Solution Code</summary>
 
-```javascript
+```solidity
 ///////////////////////
 /// State Variables ///
 ///////////////////////
