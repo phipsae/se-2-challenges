@@ -145,7 +145,7 @@ Our contract will support three main functions:
 
 ### 🔍 Inspect the Contract
 
-🔍 Next, switch to the **\`Debug Contracts\`** tab. For now, you should see just one contract there — **\`Voting\`**.
+🔍 Next, switch to the **\`Debug Contracts\`** page. For now, you should see just one contract there — **\`Voting\`**.
 
 📁 The contract lives in **\`packages/hardhat/contracts/Voting.sol\`**
 
@@ -322,10 +322,10 @@ LeanIMTData private s_tree;
 function register(uint256 _commitment) public {
   /// Checkpoint 2 //////
   if (!s_voters[msg.sender] || s_hasRegistered[msg.sender]) {
-  revert Voting__NotAllowedToVote();
+    revert Voting__NotAllowedToVote();
   }
   if (s_commitments[_commitment]) {
-  revert Voting__CommitmentAlreadyAdded(_commitment);
+    revert Voting__CommitmentAlreadyAdded(_commitment);
   }
   s_commitments[_commitment] = true;
   s_hasRegistered[msg.sender] = true;
@@ -544,7 +544,7 @@ fn main(
     nullifier: Field,
     secret: Field,
 ) {
-    ////// Checkpoint 3 //////
+    /// Checkpoint 3 //////
     let computed_nullifier_hash: Field = hash_1([nullifier]);
     assert(computed_nullifier_hash == nullifier_hash);
 
@@ -717,7 +717,7 @@ After thinking through the guiding questions, have a look at the solution code!
 \`\`\`rust
 use std::hash::poseidon::bn254::hash_1;
 use std::hash::poseidon::bn254::hash_2;
-////// Checkpoint 4 //////
+/// Checkpoint 4 //////
 use binary_merkle_root::binary_merkle_root;
 
 fn main(
@@ -726,7 +726,7 @@ fn main(
     // private inputs
     nullifier: Field,
     secret: Field,
-    ////// Checkpoint 4 //////
+    /// Checkpoint 4 //////
     // public inputs
     root: pub Field,
     vote: pub bool,
@@ -736,13 +736,13 @@ fn main(
     // max of 2^16 leaves --> 65536 leaves
     siblings: [Field; 16],
 ) {
-    ////// Checkpoint 3 //////
+    /// Checkpoint 3 //////
     let computed_nullifier_hash: Field = hash_1([nullifier]);
     assert(computed_nullifier_hash == nullifier_hash);
 
     let commitment: Field = hash_2([nullifier, secret]);
 
-    ////// Checkpoint 4 //////
+    /// Checkpoint 4 //////
     let mut siblings_num = 0;
     for i in 0..siblings.len() {
         if siblings[i] != 0 {
@@ -1189,7 +1189,7 @@ After thinking through the guiding questions, have a look at the solution code:
 
 \`\`\`ts
 const generateCommitment = async (): Promise<CommitmentData> => {
-  ////// Checkpoint 7 //////
+  /// Checkpoint 7 //////
   const nullifier = BigInt(Fr.random().toString());
   const secret = BigInt(Fr.random().toString());
   const commitment = poseidon2([nullifier, secret]);
@@ -1344,7 +1344,7 @@ const generateProof = async (
   _leaves: any[],
   _circuitData: any,
 ) => {
-  //// Checkpoint 8 //////
+  /// Checkpoint 8 //////
   const nullifierHash = poseidon1([BigInt(_nullifier)]);
   const calculatedTree = new LeanIMT((a: bigint, b: bigint) => poseidon2([a, b]));
   const leaves = _leaves.map(event => {
@@ -1510,7 +1510,7 @@ const sendVoteWithBurner = async ({
   walletAddress: \`0x${"${"}string${"}"}\`;
   proofData: LocalProofData;
 }): Promise<string> => {
-  ////// Checkpoint 9 //////
+  /// Checkpoint 9 //////
   const needed = parseEther("0.01");
   const bal = await publicClient.getBalance({ address: walletAddress });
   if (bal < needed) {
@@ -1530,7 +1530,7 @@ const sendVoteWithBurner = async ({
 };
 
 const generateBurnerWallet = () => {
-  ////// Checkpoint 9 //////
+  /// Checkpoint 9 //////
   const privateKey = generatePrivateKey();
   const account = privateKeyToAccount(privateKey);
   const wallet = { privateKey: privateKey as \`0x${"${"}string${"}"}\`, address: account.address as \`0x${"${"}string${"}"}\` };
@@ -1669,7 +1669,7 @@ const createSmartAccount = async (): Promise<{
   walletOwner: 0x$\`{string}\`;
 }> => {
   try {
-    //// Checkpoint 10 //////
+    /// Checkpoint 10 //////
     const privateKey = generatePrivateKey();
     const wallet = privateKeyToAccount(privateKey);
     const publicClient = createPublicClient({
@@ -1715,7 +1715,7 @@ const voteOnSepolia = async ({
   smartAccountClient: any;
 }): Promise<{ userOpHash: 0x$\`{string}\` }> => {
   if (!contractInfo && !contractAddress) throw new Error("Contract not found");
-  //// Checkpoint 10 //////
+  /// Checkpoint 10 //////
   const callData = encodeFunctionData({
     abi: (contractInfo?.abi as any) || ([] as any),
     functionName: "vote",
