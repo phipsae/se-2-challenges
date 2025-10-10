@@ -1767,6 +1767,14 @@ Great work! Now head to the **next checkpoint** where we’ll deploy everything 
 
 💻 Inside \`scaffold.config.ts\` change the \`targetNetwork\` to \`chains.sepolia\`. View your front-end at http://localhost:3000 and verify you see the correct network Sepolia.
 
+> ⚠️ Vercel/static deploys: copy the circuit bytecode into the Next.js public folder so the frontend can fetch it at runtime.
+
+Run this before deploying:
+
+\`\`\`sh
+cp packages/circuits/target/circuits.json packages/nextjs/public/circuits.json
+\`\`\`
+
 📦 Run \`yarn vercel\` to package up your front-end and deploy.
 
 > You might need to log in to Vercel first by running:

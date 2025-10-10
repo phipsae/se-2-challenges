@@ -94,7 +94,18 @@ export const GenerateProof = ({ leafEvents = [] }: CreateCommitmentProps) => {
         throw new Error("Failed to fetch circuit data");
       }
 
-      const fetchedCircuitData = await response.json();
+      let fetchedCircuitData: any;
+      try {
+        const apiRes = await fetch("/api/circuit");
+        if (!apiRes.ok) throw new Error("API fetch failed");
+        fetchedCircuitData = await apiRes.json();
+      } catch {
+        const staticRes = await fetch("circuits.json");
+        if (!staticRes.ok) {
+          throw new Error("Failed to fetch circuit data");
+        }
+        fetchedCircuitData = await staticRes.json();
+      }
       setCircuitData(fetchedCircuitData);
 
       const effectiveNullifier = (
