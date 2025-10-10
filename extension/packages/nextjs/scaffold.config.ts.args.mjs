@@ -4,5 +4,5 @@
 // Default args:
 export const preContent = "";
 export const extraConfigTypeName = "";
-export const configOverrides = { onlyLocalBurnerWallet: false };
+export const configOverrides = { targetNetworks: ["$$chains.hardhat$$"], onlyLocalBurnerWallet: false };
 export const skipLocalChainInTargetNetworks = false;
