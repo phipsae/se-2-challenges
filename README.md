@@ -302,7 +302,7 @@ After thinking through the guiding questions, have a look at the solution code!
 <details>
 <summary>👩🏽‍🏫 Solution Code</summary>
 
-```javascript
+```solidity
 ///////////////////////
 /// State Variables ///
 ///////////////////////
