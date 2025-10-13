@@ -53,7 +53,7 @@ Before you begin, you need to install the following tools:
 - [bb](https://barretenberg.aztec.network/docs/getting_started/) (v0.82.2)
 
 > 🚨 **Windows Users**: Noir (\`nargo\`, \`bb\`) isn’t natively supported on Windows.
-> Please install and run Noir inside **WSL (Windows Subsystem for Linux)**.
+> Please install and run Noir inside **WSL (Windows Subsystem for Linux)** using **Ubuntu 24.04.**.
 > 🚨
 
 ### 📦 Install nargo and bb
@@ -361,8 +361,8 @@ Before deploying, make one important change:
 
 1. Open **\`00_deploy_your_voting_contract.ts\`**
 2. Set your address as the \`ownerAddress\`
-3. 3. Set LeanIMT library address (\`leanIMT.address\`) at line 62
-4. Uncomment deployment of both \`poseidon3\` and \`leanIMT\`
+3. Uncomment deployment of both \`poseidon3\` and \`leanIMT\`
+4. Set LeanIMT library address (\`leanIMT.address\`) at line 62
 
 > 💡 **Poseidon3** is the hash function we use. More on that later.
 
@@ -391,10 +391,7 @@ The goal here: let a user **prove they are registered to vote (their commitment 
 A **circuit** is essentially a very complex math equation that represents a program.
 Noir lets us write a program and compile it into that math equation.
 
-The magic (math) of ZK allows us to **prove and verify** that we know the solution to that equation **without revealing the solution itself**.
-This is a powerful primitive that enables both **privacy** and **offloading computation** from expensive places (like the Ethereum blockchain) to cheap ones (like your CPU or GPU).
-
-- 👉 Noir lets us write the “program,” compile it into ZK math, and export a **Solidity verifier contract**.
+- 👉 Noir lets us write the “program”, compile it into ZK math, and export a **Solidity verifier contract**.
 - Zero-knowledge magic makes it possible to prove and verify we know the solution **without revealing the solution itself**.
 
 **Why is this powerful?**
@@ -1751,7 +1748,25 @@ Great work! Now head to the **next checkpoint** where we’ll deploy everything 
 - [ ] Learn how to set up a **smart account** with ERC-4337 (via Pimlico)
 - [ ] Use a **bundler + paymaster** (via Pimlico) to send a sponsored transaction
 
-## **Checkpoint 11: 💾 Deploy your contracts and vote on Sepolia! 🛰**
+## Checkpoint 11: 💾 Deploy your contracts and vote on Sepolia! 🛰
+
+### Configuration of Third-Party Services for Production-Grade Apps
+
+By default, 🏗 Scaffold-ETH 2 provides predefined API keys for popular services such as **Alchemy** and **Etherscan**.
+This makes it easy to start building and complete your **SpeedRunEthereum** without additional setup.
+
+For **production-grade apps**, you should generate your own API keys to avoid hitting rate limits and and to ensure integrations like Pimlico work properly.
+
+Configure your keys here:
+
+- 🔷 **\`ALCHEMY_API_KEY\`** in \`packages/hardhat/.env\` and \`packages/nextjs/.env.local\` → [Get key from Alchemy](https://dashboard.alchemy.com/)
+- 🔑 **\`NEXT_PUBLIC_PIMLICO_API_KEY\`** in \`packages/nextjs/.env.local\` → [Get key from Pimlico](https://dashboard.pimlico.io/)
+- 📃 **\`ETHERSCAN_API_KEY\`** in \`packages/hardhat/.env\` → [Get key from Etherscan](https://etherscan.io/myapikey)
+
+> 💬 Hint: Store environment variables for **Next.js** in Vercel/system env config for live apps, and use `.env
+  .local` for local testing.
+
+### Deploying Your Smart Contracts
 
 🔐 You will need to generate a **deployer address** using \`yarn generate\`. his creates a mnemonic and saves it locally.
 
@@ -1767,6 +1782,8 @@ Great work! Now head to the **next checkpoint** where we’ll deploy everything 
 
 💻 Inside \`scaffold.config.ts\` change the \`targetNetwork\` to \`chains.sepolia\`. View your front-end at http://localhost:3000 and verify you see the correct network Sepolia.
 
+### Deploying Your Frontend to Vercel
+
 > ⚠️ Vercel/static deploys: copy the circuit bytecode into the Next.js public folder so the frontend can fetch it at runtime.
 
 Run this before deploying:
@@ -1780,19 +1797,6 @@ cp packages/circuits/target/circuits.json packages/nextjs/public/circuits.json
 > You might need to log in to Vercel first by running:
 > \`yarn vercel:login\`. Once you log in (via email, GitHub, etc.), the default options should work.
 > If you want to redeploy to the same production URL: \`yarn vercel --prod\`. If you omit the \`--prod\` flag it will deploy to a preview/test URL. Follow the steps to deploy to Vercel — you’ll get a **public URL**.
-
-### **Configuration of Third-Party Services for Production-Grade Apps**
-
-By default, 🏗 Scaffold-ETH 2 provides predefined API keys for popular services such as **Alchemy** and **Etherscan**.
-This makes it easy to start building and complete your **SpeedRunEthereum** without additional setup.
-
-For **production-grade apps**, you should generate your own API keys to avoid hitting rate limits. Configure them here:
-
-- 🔷 **\`ALCHEMY_API_KEY\`** in \`packages/hardhat/.env\` and \`packages/nextjs/.env.local\` → [Get key from Alchemy](https://dashboard.alchemy.com/)
-- 🔑 **\`NEXT_PUBLIC_PIMLICO_API_KEY\`** in \`packages/nextjs/.env.local\` → [Get key from Pimlico](https://dashboard.pimlico.io/)
-- 📃 **\`ETHERSCAN_API_KEY\`** in \`packages/hardhat/.env\` → [Get key from Etherscan](https://etherscan.io/myapikey)
-
-> 💬 Hint: Store environment variables for **Next.js** in Vercel/system env config for live apps, and use \`.env.local\` for local testing.
 
 ### 🚀 🔥 Challenge Conquered!
 

@@ -79,7 +79,7 @@ export const LogStorageButton = () => {
       onClick={logAllVotingStorage}
       disabled={isLogging || !userAddress || !contractInfo?.address}
       className={`
-        btn btn-sm btn-info gap-2
+        btn btn-sm btn-info gap-2 text-white dark:text-black
         ${isLogging ? "loading" : ""}
       `}
     >
