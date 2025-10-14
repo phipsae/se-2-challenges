@@ -111,6 +111,17 @@ Head to the **`Debug Contracts`** tab and you should find a smart contract named
 
 > 🏎️ 🏁 Since we want to build a prediction market around our car race head to the `User` tab and check it out! (The race is entirely separate and has no impact on the smart contract.)
 
+---
+
+⚠️ We have disabled AI in Cursor and VSCode and highly suggest that you do not enable it so you can focus on the challenge, do everything by yourself, and hence better understand and remember things. If you are using another IDE, please disable AI yourself.
+
+🔧 If you are a vibe-coder and don't care about understanding the syntax of the code used and just want to understand the general takeaways, you can re-enable AI by:
+
+- Cursor: remove `*` from `.cursorignore` file
+- VSCode: set `chat.disableAIFeatures` to `false` in `.vscode/settings.json` file
+
+---
+
 ## Checkpoint 1: 🔭 Understanding the protocol 📺
 
 At its core, our prediction market has three essential parts:
