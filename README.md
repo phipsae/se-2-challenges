@@ -107,6 +107,17 @@ yarn start
 
 > 👩‍💻 Rerun yarn deploy whenever you want to deploy new contracts to the frontend. If you haven't made any contract changes, you can run yarn deploy --reset for a completely fresh deploy.
 
+---
+
+⚠️ We have disabled AI in Cursor and VSCode and highly suggest that you do not enable it so you can focus on the challenge, do everything by yourself, and hence better understand and remember things. If you are using another IDE, please disable AI yourself.
+
+🔧 If you are a vibe-coder and don't care about understanding the syntax of the code used and just want to understand the general takeaways, you can re-enable AI by:
+
+- Cursor: remove `*` from `.cursorignore` file
+- VSCode: set `chat.disableAIFeatures` to `false` in `.vscode/settings.json` file
+
+---
+
 ## Checkpoint 1: 🗳️🔒 Structure of the Challenge and Voting Contract
 
 ### **💬 What you’ll build**
