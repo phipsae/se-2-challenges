@@ -83,7 +83,7 @@ If you are using vscode you may want to install the [Noir Language Support](http
 Then download the challenge to your computer and install dependencies by running:
 
 \`\`\`javascript
-npx create-eth@1.0.2 -e buidlguidl/challenge-zk-voting challenge-zk-voting
+npx create-eth@1.0.2 -e scaffold-eth/se-2-challenges:challenge-zk-voting challenge-zk-voting
 cd challenge-zk-voting
 \`\`\`
 
@@ -1774,8 +1774,7 @@ Configure your keys here:
 - 🔑 **\`NEXT_PUBLIC_PIMLICO_API_KEY\`** in \`packages/nextjs/.env.local\` → [Get key from Pimlico](https://dashboard.pimlico.io/)
 - 📃 **\`ETHERSCAN_API_KEY\`** in \`packages/hardhat/.env\` → [Get key from Etherscan](https://etherscan.io/myapikey)
 
-> 💬 Hint: Store environment variables for **Next.js** in Vercel/system env config for live apps, and use `.env
-  .local` for local testing.
+> 💬 Hint: Store environment variables for **Next.js** in Vercel/system env config for live apps, and use \`.env.local\` for local testing.
 
 ### Deploying Your Smart Contracts
 
@@ -1785,7 +1784,7 @@ Configure your keys here:
 
 ⛽️ You will need to send ETH to your deployer address with your wallet, or obtain it from a public faucet of your chosen network.
 
-> 🚨 Don’t forget to set the owner address inside the 00_deploy_your_voting_contract.ts .
+> 🚨 Don’t forget to set the owner address inside the \`00_deploy_your_voting_contract.ts\`.
 
 🚀 Run \`yarn deploy --network sepolia\` to deploy your smart contract to Sepolia.
 
